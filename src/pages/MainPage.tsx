@@ -1,4 +1,5 @@
 import { useState, ChangeEvent } from "react";
+import { useNavigate } from "react-router-dom";
 import "./MainPage.css";
 
 interface FilterModalProps {
@@ -220,6 +221,12 @@ function MainPage() {
     setStudyRooms(prev => [...prev, room]);
   };
 
+  const handleLogout = () => {
+    localStorage.removeItem("authToken");
+    // 리다이렉트 등 필요 시 처리
+    window.location.href = "/login";// 로그인 페이지로 이동
+  };
+
   return (
     <div>
       <div className="main_header">
@@ -237,7 +244,7 @@ function MainPage() {
           <div className="menu_modal_content" onClick={(e) => e.stopPropagation()}>
             <p>내 스터디방</p>
             <p>내 정보</p>
-            <p>로그아웃</p>
+            <p onClick={handleLogout} style={{ cursor: "pointer" }}>로그아웃</p>
           </div>
         </div>
       )}
