@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "es2015"],
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "node",
+    "strict": true,
+    "esModuleInterop": true,         // ✅ 여기를 추가!
+    "allowSyntheticDefaultImports": true // ✅ 이 옵션도 함께 사용 추천
+  },
+  "include": ["src"]
+}
