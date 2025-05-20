@@ -478,7 +478,7 @@ p:focus {
     cursor: pointer;
     align-items: center;
     margin-left: 20%;
-    border-radius: 5px;
+    border-radius: 10px;
 }
 .room-label {
     margin-top: 15px;

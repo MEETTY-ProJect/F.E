@@ -1,5 +1,4 @@
 import { useState, ChangeEvent } from "react";
-import { useNavigate } from "react-router-dom";
 import "./MainPage.css";
 
 interface FilterModalProps {
