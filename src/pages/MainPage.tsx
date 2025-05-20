@@ -201,6 +201,34 @@ function CreateRoomModal({ isOpen, onClose, onCreate }: CreateRoomModalProps) {
   );
 }
 
+interface ApprovalRequestModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  roomTitle: string;
+}
+
+function ApprovalRequestModal({ isOpen, onClose, roomTitle }: ApprovalRequestModalProps) {
+  if (!isOpen) return null;
+
+  const handleApprove = () => {
+    alert(`"${roomTitle}" 방에 승인 요청을 보냈습니다.`);
+    onClose();
+  };
+
+  return (
+    <div className="approval_overlay" onClick={onClose}>
+      <div className="approval_modal_content" onClick={e => e.stopPropagation()}>
+        <h3>승인 요청</h3>
+        <p>"{roomTitle}" 방에 승인 요청을 하시겠습니까?</p>
+        <div className="approval_buttons">
+          <button onClick={onClose}>취소</button>
+          <button onClick={handleApprove}>승인 요청</button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MainPage() {
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
   const [isFilterOpen, setIsFilterOpen] = useState<boolean>(false);
@@ -208,6 +236,9 @@ function MainPage() {
   const [studyRooms, setStudyRooms] = useState<
     { title: string; description: string; image: string }[]
   >([]);
+
+  const [isApprovalModalOpen, setIsApprovalModalOpen] = useState(false);
+  const [selectedRoomTitle, setSelectedRoomTitle] = useState<string>("");
 
   const toggleMenu = () => setIsMenuOpen(prev => !prev);
   const toggleFilter = () => setIsFilterOpen(prev => !prev);
@@ -222,8 +253,17 @@ function MainPage() {
 
   const handleLogout = () => {
     localStorage.removeItem("authToken");
-    // 리다이렉트 등 필요 시 처리
-    window.location.href = "/login";// 로그인 페이지로 이동
+    window.location.href = "/login";
+  };
+
+  const openApprovalModal = (roomTitle: string) => {
+    setSelectedRoomTitle(roomTitle);
+    setIsApprovalModalOpen(true);
+  };
+
+  const closeApprovalModal = () => {
+    setIsApprovalModalOpen(false);
+    setSelectedRoomTitle("");
   };
 
   return (
@@ -262,16 +302,22 @@ function MainPage() {
 
       <FilterModal isFilterOpen={isFilterOpen} closeFilter={closeFilter} />
       <CreateRoomModal isOpen={isCreateModalOpen} onClose={closeCreateModal} onCreate={addRoom} />
+      <ApprovalRequestModal
+        isOpen={isApprovalModalOpen}
+        onClose={closeApprovalModal}
+        roomTitle={selectedRoomTitle}
+      />
 
       <div className="grid_parent">
         <div className="grid-container">
           {studyRooms.map((room, i) => (
-            <div className="grid-room" key={i}>
-              <img
-              src={room.image}
-              alt="Room"
-              className="room-profile-img"
-              />
+            <div
+              className="grid-room"
+              key={i}
+              onClick={() => openApprovalModal(room.title)}
+              style={{ cursor: "pointer" }}
+            >
+              <img src={room.image} alt="Room" className="room-profile-img" />
               <div className="room-label">{room.title}</div>
             </div>
           ))}

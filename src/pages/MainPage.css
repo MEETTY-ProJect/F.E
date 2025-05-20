@@ -489,3 +489,44 @@ p:focus {
     margin-left: 20%;
     text-align: start;
 }
+/* 승인요청 알림 모달창 */
+.approval_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .approval_modal_content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 300px;
+  }
+  
+  .approval_buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+  }
+  
+  .approval_cancel {
+    background-color: #ccc;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .approval_confirm {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+  }
+  
