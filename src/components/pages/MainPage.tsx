@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
-import "./MainPage.css";
+import "../pages/MainPage.css";
 import FilterModal from "../modals/FilterModal";
 import CreateRoomModal from "../modals/CreateRoomModal";
 import ApprovalRequestModal from "../modals/ApprovalRequestModal";

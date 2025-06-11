@@ -435,7 +435,7 @@ p:focus {
 .main-createroom {
     width: 80px;
     height: 35px;
-    background-image: url('/src/assets/createroom.png');
+    background-image: url('/src/assets/memu.png');
     background-size: 12px 12px;
     background-position: 12px center;
     background-repeat: no-repeat;
