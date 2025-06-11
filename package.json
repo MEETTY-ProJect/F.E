@@ -1,14 +1,14 @@
 {
+  "type": "module",
   "name": "meetty",
   "private": true,
   "proxy": "http://http://34.64.218.29:8080",
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "node --loader=ts-node/esm node_modules/.bin/vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "build": "vite build"
   },
   "dependencies": {
     "axios": "^1.9.0",
