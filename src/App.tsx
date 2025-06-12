@@ -9,7 +9,7 @@ import StudyRoomPage from "./components/pages/StudyRoomPage";
 import Header from "./components/common/Header";
 
 const App: React.FC = () => {
-  const noHeaderPaths = ["/login", "/signup", "/main", "/study-room"];
+  const noHeaderPaths = ["/login", "/signup", "/study-room", "/main"];
   const hideDefaultHeader =
     location.pathname.startsWith("/study-room") ||
     noHeaderPaths.includes(location.pathname);
@@ -23,7 +23,7 @@ const App: React.FC = () => {
         <Route path="/main" element={<MainPage />} />
         {/* 로그아웃했을때 다시 로그인 페이지로 */}
         <Route path="/login" element={<Login />} />
-        <Route path="study-room/:id" element={<StudyRoomPage />} />
+        <Route path="study-room/:roomId" element={<StudyRoomPage />} />
         <Route path="/myrooms" element={<MyStudyRooms />} />
         <Route path="/info" element={<MyInfo />} />
       </Routes>
