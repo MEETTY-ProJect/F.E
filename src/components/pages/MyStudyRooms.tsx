@@ -5,7 +5,7 @@ import styles from "./styles/MyStudyRooms.module.css";
 
 const MyStudyRooms: React.FC = () => {
   return (
-    <div className={styles.pageWrapper}>
+    <div className={styles.container}>
       <SubHeader />
       <Contents />
     </div>

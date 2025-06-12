@@ -5,7 +5,7 @@ import styles from "./styles/MyInfo.module.css";
 
 const MyInfo: React.FC = () => {
   return (
-    <div className={styles.pageWrapper}>
+    <div className={styles.container}>
       <SubHeader />
       <Contents />
     </div>
