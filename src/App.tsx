@@ -15,7 +15,7 @@ import Header from "./components/common/Header";
 
 const App: React.FC = () => {
   const location = useLocation();
-  const noHeaderPaths = ["/login", "/signup"];
+  const noHeaderPaths = ["/", "/signup", "/login"];
   const hideDefaultHeader =
     location.pathname.startsWith("/study-room") ||
     noHeaderPaths.includes(location.pathname);
