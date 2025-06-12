@@ -1,0 +1,16 @@
+.arrowIcon {
+  width: 100%;
+  height: 100%;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+/* 아래 방향 (기본 상태) */
+.flipDown {
+  transform: scaleY(1);
+}
+
+/* 위로 뒤집힘 */
+.flipUp {
+  transform: scaleY(-1);
+}

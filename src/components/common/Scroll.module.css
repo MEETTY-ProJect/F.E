@@ -1,0 +1,28 @@
+/* 초기에는 스크롤 자체는 숨김 */
+.scrollBase {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.scrollBase::-webkit-scrollbar {
+  width: 6px;
+  background: transparent;
+}
+
+/* 기본: thumb 투명 (숨김 상태) */
+.scrollBase::-webkit-scrollbar-thumb {
+  background-color: transparent;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+  border-radius: 4px;
+  opacity: 0;
+}
+
+/* ✅ 스크롤 보여줄 때 */
+.scrollVisible {
+  scrollbar-width: thin;
+}
+
+.scrollVisible::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.2);
+  opacity: 1;
+}
