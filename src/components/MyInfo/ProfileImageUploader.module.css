@@ -1,0 +1,27 @@
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+
+.image {
+  width: 200px;
+  height: 200px;
+  border-radius: 10px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+}
+
+.changeButton {
+  margin-top: 1rem;
+  padding: 0.5rem 1rem;
+  background-color: var(--button-color);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.changeButton:hover {
+  background-color: var(--main-color);
+}
