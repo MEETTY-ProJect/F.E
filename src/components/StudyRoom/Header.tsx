@@ -5,22 +5,24 @@ import humanIcon from "@assets/human-white.svg";
 // import ArrowUp from "@assets/chevron-up.svg";
 // import ChattingPanel from "./ChattingPanel";
 import ArrowToggle from "./ArrowToggle";
+import { StudyRoomInfo } from "../../api/studyroomInfo.api";
 
 interface HeaderProps {
   isOpen: boolean;
   onToggle: () => void;
+  roomInfo: StudyRoomInfo;
 }
 
-const Header = ({ isOpen, onToggle }: HeaderProps) => {
+const Header = ({ isOpen, onToggle, roomInfo }: HeaderProps) => {
   return (
     <header className={styles.header}>
       <div className={styles["header-left"]}>
-        <span className={styles["header-left-name"]}>
-          공무원 공부 같이 해요!{" "}
-        </span>
+        <span className={styles["header-left-name"]}>{roomInfo.roomName}</span>
         <span className={styles["header-left-bar"]}>|</span>
         <img src={humanIcon} alt="humanIcon" className={styles["human-icon"]} />
-        <span className={styles["header-left-number"]}>4</span>
+        <span className={styles["header-left-number"]}>
+          {roomInfo.currentMemberCount}
+        </span>
       </div>
       <div className={styles["header-right"]}>
         <ArrowToggle isOpen={isOpen} onClick={onToggle} />

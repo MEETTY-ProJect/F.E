@@ -25,21 +25,20 @@ const regions = [
 ];
 
 const purposes = [
-  "🎓 학업/자격증",
-  "💼 취업/면접",
-  "💻 개발/프로그래밍",
-  "🌐 외국어",
-  "📚 자기계발",
-  "🎨 취미/예술",
+  { value: "ACADEMIC_CERTIFICATE", label: "🎓 학업/자격증" },
+  { value: "EMPLOYMENT_INTERVIEW", label: "💼 취업/면접" },
+  { value: "DEVELOPMENT_PROGRAMMING", label: "💻 개발/프로그래밍" },
+  { value: "FOREIGN_LANGUAGE_SELF_IMPROVEMENT", label: "🌐 외국어/자기계발" },
+  { value: "HOBBY_ART", label: "🎨 취미/예술" },
 ];
 
 export interface StudyRoomValues {
-  name: string;
-  description: string;
+  roomName: string;
+  introduction: string;
   profileImageUrl?: string;
-  maxMembers: number;
+  capacity: number;
   purpose: string;
-  region?: string;
+  region?: string | null;
 }
 
 interface Props {
@@ -77,8 +76,8 @@ export function StudyRoomSettingsModal({
     const reader = new FileReader();
     reader.onloadend = () => {
       if (typeof reader.result === "string") {
-        setPreviewImage(reader.result); // 미리보기 이미지 변경
-        handleChange("profileImageUrl", reader.result); // 필요 시 저장
+        setPreviewImage(reader.result);
+        handleChange("profileImageUrl", reader.result);
       }
     };
     reader.readAsDataURL(file);
@@ -95,27 +94,27 @@ export function StudyRoomSettingsModal({
           }}
         >
           <div className={styles.field}>
-            <label htmlFor="name" className={styles.label}>
+            <label htmlFor="roomName" className={styles.label}>
               스터디방 이름
             </label>
             <input
-              id="name"
+              id="roomName"
               className={styles.input}
               type="text"
-              value={values.name}
-              onChange={(e) => handleChange("name", e.target.value)}
+              value={values.roomName}
+              onChange={(e) => handleChange("roomName", e.target.value)}
             />
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="description" className={styles.label}>
+            <label htmlFor="introduction" className={styles.label}>
               설명
             </label>
             <textarea
-              id="description"
+              id="introduction"
               className={styles.textarea}
-              value={values.description}
-              onChange={(e) => handleChange("description", e.target.value)}
+              value={values.introduction}
+              onChange={(e) => handleChange("introduction", e.target.value)}
             />
           </div>
 
@@ -139,28 +138,17 @@ export function StudyRoomSettingsModal({
                 />
               </label>
             </div>
-
-            {/* <input
-              id="profileImageUrl"
-              className={styles.input}
-              type="text"
-              placeholder="이미지 URL 입력"
-              value={values.profileImageUrl || ""}
-              onChange={(e) => handleChange("profileImageUrl", e.target.value)}
-            /> */}
           </div>
 
           <div className={styles.field}>
-            <label htmlFor="maxMembers" className={styles.label}>
+            <label htmlFor="capacity" className={styles.label}>
               최대 인원 수
             </label>
             <select
-              id="maxMembers"
+              id="capacity"
               className={styles.select}
-              value={values.maxMembers}
-              onChange={(e) =>
-                handleChange("maxMembers", Number(e.target.value))
-              }
+              value={values.capacity}
+              onChange={(e) => handleChange("capacity", Number(e.target.value))}
             >
               {Array.from({ length: 30 }, (_, i) => i + 1).map((n) => (
                 <option key={n} value={n}>{`${n}명`}</option>
@@ -176,16 +164,18 @@ export function StudyRoomSettingsModal({
               id="purpose"
               className={styles.select}
               value={values.purpose}
-              onChange={(e) => handleChange("purpose", e.target.value)}
+              onChange={(e) =>
+                handleChange(
+                  "purpose",
+                  e.target.value as StudyRoomValues["purpose"]
+                )
+              }
             >
-              {purposes.map((purpose) => {
-                const value = purpose.replace(/^[^\wㄱ-ㅎ가-힣]+/, "");
-                return (
-                  <option key={value} value={value}>
-                    {purpose}
-                  </option>
-                );
-              })}
+              {purposes.map(({ value, label }) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
             </select>
           </div>
 

@@ -1,70 +1,99 @@
-.header {
+.mainHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding-left: 1rem;
+  padding: 0 20px;
+  height: 60px;
   background-color: #fff;
-  color: var(--text-color);
-  position: relative;
+  border-bottom: 1px solid #e0e0e0;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  min-width: 1200px;
 }
 
-.header-left {
+.mainLogo {
+  font-size: 27px;
+  font-weight: bold;
+  color: #333;
+  cursor: pointer;
+}
+
+.mainRight {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 20px;
 }
 
-.profile-icon {
+.mainAlarm {
+  width: 25px;
+  height: 25px;
+  background-image: url("/src/assets/alarm.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+
+.mainProfile {
+  display: flex;
+  align-items: center;
+}
+
+.profileImg {
   width: 30px;
   height: 30px;
-  border-radius: 50%;
-}
-
-.username {
-  font-weight: bold;
-  font-size: 1rem;
-  color: var(--text-color);
-}
-
-.menu-btn {
-  font-size: 1.5rem;
-  background: none;
-  border: none;
+  border-radius: 5px;
+  object-fit: cover;
   cursor: pointer;
-  color: var(--text-color);
 }
 
-.dropdown-menu {
+.mainName {
+  font-size: 15px;
+  color: #333;
+}
+
+.menuIcon {
+  width: 25px;
+  height: 25px;
+  cursor: pointer;
+}
+
+.menuOverlay {
   position: absolute;
-  top: 3rem;
-  right: 0.5rem;
+  top: 60px;
+  right: 20px;
   background-color: var(--sub-color);
   border-radius: 8px;
-  width: 120px;
-  padding: 0.5rem 0;
-  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-  display: none;
+  padding: 10px 10px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  z-index: 1001;
+}
+
+.menuModalContent {
+  display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  z-index: 1000;
+  font-size: 17px;
 }
 
-.dropdown-menu.open {
-  display: flex;
+.menuModalContent button {
+  font-size: 17px;
 }
 
-.menu-item {
-  all: unset;
+.menuItem {
   background-color: var(--sub-color);
-  display: block;
-  padding: 0.5rem;
+  padding: 0.5rem 1rem;
   text-align: center;
-  cursor: pointer;
   font-weight: bold;
   color: var(--text-color);
   text-decoration: none;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+  border: none;
 }
 
-.menu-item:hover {
+.menuItem:hover {
   background-color: var(--main-color);
 }
