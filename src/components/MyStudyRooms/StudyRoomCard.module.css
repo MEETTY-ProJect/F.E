@@ -1,0 +1,59 @@
+.card {
+  background-color: #f5f5f5;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.05);
+  width: 200px;
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.card:hover {
+  background-color: #fff9db; /* 💡 은은한 파란톤 추천 */
+  transform: scale(1.03); /* 살짝 커짐 */
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* 더 강조된 그림자 */
+}
+
+.imageWrapper {
+  height: 128px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  overflow: hidden;
+}
+
+.imageWrapper img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.textWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #333;
+}
+
+.meta {
+  font-size: 0.85rem;
+  color: #666;
+  margin-top: 4px;
+}
+
+.noImage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #aaa;
+  font-size: 0.9rem;
+}

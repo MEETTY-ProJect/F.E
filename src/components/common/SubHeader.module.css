@@ -1,0 +1,19 @@
+.subHeader {
+  background-color: var(--main-color);
+  padding: 2rem;
+  padding-bottom: 3.5rem;
+  text-align: center;
+  color: white;
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
+
+.description {
+  font-size: 1rem;
+  opacity: 0.9;
+}
