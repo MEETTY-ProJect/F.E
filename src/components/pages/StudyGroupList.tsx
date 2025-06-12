@@ -1,4 +1,4 @@
-// src/api/studyAPI.ts
+
 
 export interface StudyGroup {
   id: number;

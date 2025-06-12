@@ -1,0 +1,73 @@
+.main-alarm {
+  position: relative;
+  width: 25px;
+  height: 25px;
+  background-image: url('/src/assets/alarm.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  cursor: pointer;
+}
+
+.alarm-button {
+  cursor: pointer;
+  border: none;
+}
+
+/* 모달 기본 스타일 */
+.alarm-modal {
+  position: absolute;
+  top: 40px;
+  right: 0;
+  width: 300px;
+  height: 450px;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 100;
+  padding: 10px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.alarm-modal ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.alarm-modal li {
+  margin-bottom: 8px;
+}
+
+.alarm-modal li a {
+  text-decoration: none;
+  color: #333;
+}
+
+.alarm-modal li .time {
+  display: block;
+  font-size: 12px;
+  color: #999;
+  margin-top: 2px;
+}
+
+.main-alarm ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.main-alarm li {
+  background-color: white;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  transition: background-color 0.3s;
+  cursor: default;
+}
+  
+.main-alarm li:hover {
+  background-color: #e6f7ff;
+}  
