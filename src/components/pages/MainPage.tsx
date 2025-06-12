@@ -6,12 +6,14 @@ import ApprovalRequestModal from "../modals/ApprovalRequestModal";
 import { logout } from "../utils/logout";
 
 function MainPage() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isApprovalModalOpen, setIsApprovalModalOpen] = useState(false);
   const [selectedRoom, setSelectedRoom] = useState<any | null>(null);
-  const [userInfo, setUserInfo] = useState({ profileImageUrl: "", nickname: "" });
+  const [userInfo, setUserInfo] = useState({
+    profileImageUrl: "",
+    nickname: "",
+  });
   const [searchText, setSearchText] = useState("");
   const [results, setResults] = useState<any[]>([]);
   const [studyRooms, setStudyRooms] = useState<any[]>([]);
@@ -63,7 +65,8 @@ function MainPage() {
 
   useEffect(() => {
     const nickname = localStorage.getItem("username") || "사용자";
-    const profileImageUrl = localStorage.getItem("profileImage") || "/default-profile.png";
+    const profileImageUrl =
+      localStorage.getItem("profileImage") || "/default-profile.png";
     setUserInfo({ nickname, profileImageUrl });
   }, []);
 
@@ -81,7 +84,8 @@ function MainPage() {
       .filter((i) => i !== -1);
 
     if (matchIndexes.length > 0) {
-      const middleMatchIndex = matchIndexes[Math.floor(matchIndexes.length / 2)];
+      const middleMatchIndex =
+        matchIndexes[Math.floor(matchIndexes.length / 2)];
       const targetPage = Math.floor(middleMatchIndex / roomsPerPage) + 1;
       setCurrentPage(targetPage);
       setResults(studyRooms);
@@ -94,37 +98,6 @@ function MainPage() {
 
   return (
     <div>
-      <div className="main-header">
-        <div className="main-logo">Logo</div>
-        <div className="main-right">
-          <div className="main-alarm"></div>
-          <div className="main-profile">
-            <img
-              src={userInfo.profileImageUrl || "/default-profile.png"}
-              alt=""
-              style={{
-                width: "25px",
-                height: "25px",
-                borderRadius: "5px",
-                verticalAlign: "middle",
-              }}
-            />
-          </div>
-          <div className="main-name">{userInfo.nickname} 님</div>
-          <div className="main-menu" onClick={() => setIsMenuOpen(!isMenuOpen)}></div>
-        </div>
-      </div>
-
-      {isMenuOpen && (
-        <div className="menu-overlay" onClick={() => setIsMenuOpen(false)}>
-          <div className="menu-modal-content" onClick={(e) => e.stopPropagation()}>
-            <p>내 스터디방</p>
-            <p>내 정보</p>
-            <p onClick={logout}>로그아웃</p>
-          </div>
-        </div>
-      )}
-
       <div className="main-box">
         <form className="main-search" onSubmit={handleSearch}>
           <div className="search-wrapper">
@@ -144,12 +117,22 @@ function MainPage() {
 
       {/* 필터 및 방 생성 */}
       <div className="main-button">
-        <button className="main-filter" onClick={() => setIsFilterOpen(true)}>필터</button>
-        <div className="main-createroom" onClick={() => setIsCreateModalOpen(true)}>방 생성</div>
+        <button className="main-filter" onClick={() => setIsFilterOpen(true)}>
+          필터
+        </button>
+        <div
+          className="main-createroom"
+          onClick={() => setIsCreateModalOpen(true)}
+        >
+          방 생성
+        </div>
       </div>
 
       {/* 모달 컴포넌트들 */}
-      <FilterModal isFilterOpen={isFilterOpen} closeFilter={() => setIsFilterOpen(false)} />
+      <FilterModal
+        isFilterOpen={isFilterOpen}
+        closeFilter={() => setIsFilterOpen(false)}
+      />
       <CreateRoomModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
@@ -169,10 +152,16 @@ function MainPage() {
       {/* 스터디방 리스트 */}
       <div className={`grid-container ${fade ? "fade-out" : ""}`}>
         {results.length === 0 ? (
-          <div className="no-results-message">스터디방이 존재하지 않습니다.</div>
+          <div className="no-results-message">
+            스터디방이 존재하지 않습니다.
+          </div>
         ) : (
           currentRooms.map((room: any, i: number) => (
-            <div key={i} className="grid-room" onClick={() => openApprovalModal(room)}>
+            <div
+              key={i}
+              className="grid-room"
+              onClick={() => openApprovalModal(room)}
+            >
               <img src={room.image} alt="Room" className="room-profile-img" />
               <div className="room-label">{room.title}</div>
             </div>
@@ -183,7 +172,12 @@ function MainPage() {
       {/* 페이지네이션 */}
       {totalPages > 1 && (
         <div className="pagination">
-          <button onClick={() => changePage(Math.max(currentPage - 1, 1))} disabled={currentPage === 1}>이전</button>
+          <button
+            onClick={() => changePage(Math.max(currentPage - 1, 1))}
+            disabled={currentPage === 1}
+          >
+            이전
+          </button>
           {[...Array(totalPages)].map((_, i) => (
             <button
               key={i}
@@ -193,7 +187,12 @@ function MainPage() {
               {i + 1}
             </button>
           ))}
-          <button onClick={() => changePage(Math.min(currentPage + 1, totalPages))} disabled={currentPage === totalPages}>다음</button>
+          <button
+            onClick={() => changePage(Math.min(currentPage + 1, totalPages))}
+            disabled={currentPage === totalPages}
+          >
+            다음
+          </button>
         </div>
       )}
     </div>

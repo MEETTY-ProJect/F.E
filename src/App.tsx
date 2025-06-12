@@ -1,5 +1,10 @@
 import React from "react";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useLocation,
+} from "react-router-dom";
 import Login from "./components/pages/Login";
 import SignUp from "./components/pages/SignUp";
 import MainPage from "./components/pages/MainPage";
@@ -9,13 +14,14 @@ import StudyRoomPage from "./components/pages/StudyRoomPage";
 import Header from "./components/common/Header";
 
 const App: React.FC = () => {
-  const noHeaderPaths = ["/login", "/signup", "/study-room", "/main"];
+  const location = useLocation();
+  const noHeaderPaths = ["/login", "/signup"];
   const hideDefaultHeader =
     location.pathname.startsWith("/study-room") ||
     noHeaderPaths.includes(location.pathname);
 
   return (
-    <Router>
+    <>
       {!hideDefaultHeader && <Header />}
       <Routes>
         <Route path="/" element={<Login />} />
@@ -27,7 +33,7 @@ const App: React.FC = () => {
         <Route path="/myrooms" element={<MyStudyRooms />} />
         <Route path="/info" element={<MyInfo />} />
       </Routes>
-    </Router>
+    </>
   );
 };
 
