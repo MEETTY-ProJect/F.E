@@ -1,5 +1,5 @@
 import React from 'react';
-import jwt_decode from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode'; // ✅ 이렇게 변경
 
 declare global {
   interface Window {
@@ -7,41 +7,32 @@ declare global {
   }
 }
 
-type GoogleIconButtonProps = {
-  onClick?: () => void;
-};
-
-const GoogleLoginPage: React.FC<GoogleIconButtonProps> = ({ onClick }) => {
+const GoogleLoginPage: React.FC = () => {
   const handleGoogleLogin = () => {
     window.google.accounts.id.initialize({
-      client_id: 'YOUR_GOOGLE_CLIENT_ID', // 🔁 여기에 구글 클라이언트 ID 입력
+      client_id: '455479613011-ri3ju46n6vl3pm8856bdj5emnohjt81a.apps.googleusercontent.com',
       callback: handleCredentialResponse,
+      auto_select: false,
+      use_fedcm_for_prompt: false,
     });
     window.google.accounts.id.prompt();
   };
 
-  const handleCredentialResponse = async (response: any) => {
-    const jwt_decode = (await import('jwt-decode')).default;
-    // const decoded = jwt_decode(response.credential);
-    // console.log('Google 사용자 정보:', decoded);
+  const handleCredentialResponse = (response: any) => {
+    const decoded: any = jwtDecode(response.credential); // ✅ 타입 지정
+    console.log('✅ 구글 사용자 정보:', decoded);
+
+    // 여기에 백엔드에 보내는 코드도 추가 가능:
+    // await fetch("http://your-server.com/api/auth/google", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: JSON.stringify({ token: response.credential }),
+    // });
   };
-  
 
   return (
-    <button
-      onClick={handleGoogleLogin}
-      style={{
-        backgroundColor: 'transparent',
-        border: 'none',
-        padding: 0,
-        cursor: 'pointer',
-      }}
-    >
-      <img
-        src="/google_login.png"
-        alt="Google login"
-        style={{ width: '100px', height: '25px' }}
-      />
+    <button onClick={handleGoogleLogin} style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}>
+      <img src="/google_login.png" alt="Google login" style={{ width: '100px', height: '25px' }} />
     </button>
   );
 };
