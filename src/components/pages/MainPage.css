@@ -21,7 +21,7 @@ body {
     align-items: center;      /* 세로 중앙 정렬 */
     gap: 20px;
 }
-.main-alarm {
+/* .main-alarm {
     width: 25px;
     height: 25px;
     background-image: url('/src/assets/alarm.png');
@@ -29,7 +29,7 @@ body {
     background-repeat: no-repeat;
     background-position: center;
     cursor: pointer;
-}
+} */
 /* .main-profile {
     width: 25px;
     height: 25px;

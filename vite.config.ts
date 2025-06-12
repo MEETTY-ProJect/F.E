@@ -7,5 +7,8 @@ export default defineConfig({
   base: '/',
   build: {
     outDir: 'dist',
+  },
+  define: {
+    'global': 'globalThis'
   }
 })
