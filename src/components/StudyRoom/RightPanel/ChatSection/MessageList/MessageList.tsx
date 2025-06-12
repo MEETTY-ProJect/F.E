@@ -34,7 +34,7 @@ const MessageList = ({ newMessages }: MessageListProps) => {
     isFetching.current = true;
 
     try {
-      const oldestId = messages[0]?.id ?? Number.MAX_SAFE_INTEGER; // 초기엔 가장 큰 값
+      const oldestId = messages[0]?.id ?? 999999999;
       const data = await getChatMessages(Number(roomId), oldestId);
 
       if (data.length === 0) {

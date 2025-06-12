@@ -11,10 +11,7 @@ export function useChatSocket(
     if (!roomId || !token) return;
 
     const ws = new WebSocket(
-      `ws://${import.meta.env.VITE_BASE_URL.replace(
-        "http://",
-        ""
-      )}/chat?room=${roomId}&token=${token}`
+      `ws://34.64.218.29:8080/chat?room=${roomId}&token=${token}`
     );
     socketRef.current = ws;
 

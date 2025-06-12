@@ -1,4 +1,3 @@
-// src/api/chat.ts
 import { api } from "./index";
 
 // ✅ 메시지 타입 정의
@@ -31,7 +30,7 @@ export const getChatMessages = async (
     {
       params: {
         limit,
-        // lastMessageId,
+        lastMessageId,
       },
     }
   );
