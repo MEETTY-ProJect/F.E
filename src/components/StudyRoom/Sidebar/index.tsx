@@ -12,13 +12,20 @@ import StudyRoomSettingModal, {
 import StudyRoomMemberModal from "./Modal/StudyRoomMember/StudyRoomMemberModal";
 import ApproveRequestModal from "./Modal/ApproveRequest/ApproveRequestModal";
 import ExitConfirmModal from "./Modal/ExitConfirm/ExitConfirmModal";
+import { StudyRoomInfo } from "../../../api/studyroomInfo.api";
+
+interface SidebarProps {
+  roomInfo: StudyRoomInfo;
+}
 
 type ModalType = "setting" | "member" | "approve" | "exit" | null;
 
-export default function Sidebar() {
+export default function Sidebar({ roomInfo }: SidebarProps) {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
 
-  const handleOpen = (modal: ModalType) => setActiveModal(modal);
+  const handleOpen = (modal: ModalType) => {
+    setActiveModal((prev) => (prev === modal ? null : modal));
+  };
   const handleClose = () => setActiveModal(null);
   const handleSave = (values: StudyRoomValues) => {
     console.log("저장할 값:", values);
@@ -30,15 +37,6 @@ export default function Sidebar() {
     console.log("방 삭제!");
     // → 여기에서 삭제 API 호출
     setActiveModal(null);
-  };
-
-  // 임시 데이터
-  const initialValues: StudyRoomValues = {
-    name: "우리 스터디방",
-    description: "매일 8시에 모여요",
-    maxMembers: 10,
-    purpose: "스터디",
-    // profileImageUrl, region은 선택이라 빼도 OK
   };
 
   return (
@@ -80,7 +78,7 @@ export default function Sidebar() {
       {activeModal === "setting" && (
         <StudyRoomSettingModal
           isOpen={true} // 모달 자체는 드로어 안에서만 렌더
-          initialValues={initialValues}
+          initialValues={roomInfo}
           onCancel={handleClose} // 취소 버튼 클릭 시
           onSave={handleSave} // 저장 버튼 클릭 시
           onDelete={handleDelete} // 삭제 버튼 클릭 시
