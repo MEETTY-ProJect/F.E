@@ -18,7 +18,9 @@ type ModalType = "setting" | "member" | "approve" | "exit" | null;
 export default function Sidebar() {
   const [activeModal, setActiveModal] = useState<ModalType>(null);
 
-  const handleOpen = (modal: ModalType) => setActiveModal(modal);
+  const handleOpen = (modal: ModalType) => {
+    setActiveModal((prev) => (prev === modal ? null : modal));
+  };
   const handleClose = () => setActiveModal(null);
   const handleSave = (values: StudyRoomValues) => {
     console.log("저장할 값:", values);
