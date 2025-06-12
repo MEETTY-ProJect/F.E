@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import styles from "./ChatSection.module.css";
-
+import { useChatSocket } from "../../../../hooks/useChatSocket";
 import ChatFooter from "./ChatFooter/ChatFooter";
 import MessageList from "./MessageList/MessageList";
+import { useParams } from "react-router";
 
 interface Message {
   id: number;
@@ -13,46 +14,48 @@ interface Message {
 }
 
 interface ChatSectionProps {
-  messages: Message[];
   users: string[];
 }
 
-const ChatSection = ({
-  messages: initialMessages,
-  users,
-}: ChatSectionProps) => {
-  const [messages, setMessages] = useState(initialMessages);
-  const [selectedDMUser, setSelectedDMUser] = useState<string | null>(null);
+const ChatSection = ({ users }: ChatSectionProps) => {
+  const [DMUserList, setDMUserList] = useState<string | null>(null);
+  const { roomId } = useParams<{ roomId: string }>();
+  const token = localStorage.getItem("token") || "";
+  const [messages, setMessages] = useState<Message[]>([]);
 
-  const handleSend = (content: string) => {
-    const now = new Date();
-    const time = now.toLocaleTimeString("ko-KR", {
-      hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-
+  const handleNewMessage = (data: any) => {
     const newMessage: Message = {
-      id: Date.now(),
-      user: "나",
-      profile: null,
-      content,
-      time,
+      id: data.messageId,
+      user: data.username,
+      profile: data.profileImage ?? null,
+      content: data.message,
+      time: new Date(data.createdAt).toLocaleTimeString("ko-KR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }),
     };
 
-    setMessages((prev) => [...prev, newMessage]);
+    setMessages((prev) => {
+      if (prev.find((msg) => msg.id === newMessage.id)) return prev;
+      return [...prev, newMessage];
+    });
   };
+
+  const { sendMessage } = useChatSocket(roomId || "", token, handleNewMessage);
 
   return (
     <div className={styles.chatSection}>
       <div className={styles.messageArea}>
-        <MessageList />
+        <MessageList newMessages={messages} />
       </div>
       <ChatFooter
         users={users}
-        selectedUser={selectedDMUser}
-        onSelectUser={setSelectedDMUser}
-        onSend={handleSend}
+        DMUserList={DMUserList}
+        onDMUserList={setDMUserList}
+        sendMessage={sendMessage}
+        roomId={roomId || ""}
+        token={token}
       />
     </div>
   );

@@ -3,16 +3,16 @@ import styles from "./ChatFooter.module.css";
 
 interface DMSelectorProps {
   users: string[];
-  selectedUser: string | null;
-  onSelect: (user: string | null) => void;
+  DMUserList: string | null;
+  onDMUserList: (user: string | null) => void;
 }
 
-const DMSelector = ({ users, selectedUser, onSelect }: DMSelectorProps) => {
+const DMSelector = ({ users, DMUserList, onDMUserList }: DMSelectorProps) => {
   return (
     <select
       className={styles.selectBox}
-      value={selectedUser ?? ""}
-      onChange={(e) => onSelect(e.target.value || null)}
+      value={DMUserList ?? ""}
+      onChange={(e) => onDMUserList(e.target.value || null)}
     >
       <option value="">전체</option>
       {users.map((user) => (

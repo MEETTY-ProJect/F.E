@@ -5,25 +5,37 @@ import ChatInputBox from "./ChatInputBox";
 
 interface ChatFooterProps {
   users: string[];
-  selectedUser: string | null;
-  onSelectUser: (user: string | null) => void;
-  onSend: (message: string) => void;
+  DMUserList: string | null;
+  onDMUserList: (user: string | null) => void;
+  sendMessage: (msg: any) => void;
+  roomId: string;
+  token: string;
 }
 
 const ChatFooter = ({
   users,
-  selectedUser,
-  onSelectUser,
-  onSend,
+  DMUserList,
+  onDMUserList,
+  sendMessage,
+  roomId,
+  token,
 }: ChatFooterProps) => {
+  const handleSend = (text: string) => {
+    sendMessage({
+      type: "CHAT",
+      roomId,
+      token,
+      message: text,
+    });
+  };
   return (
     <div className={styles.footerContainer}>
       <DMSelector
         users={users}
-        selectedUser={selectedUser}
-        onSelect={onSelectUser}
+        DMUserList={DMUserList}
+        onDMUserList={onDMUserList}
       />
-      <ChatInputBox onSend={onSend} />
+      <ChatInputBox onSend={handleSend} />
     </div>
   );
 };

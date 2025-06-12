@@ -19,12 +19,21 @@ interface ChatMessagesResponse {
   errorCode?: any;
 }
 
-// ✅ 특정 스터디룸 메시지 목록 가져오기
+// ✅ 특정 스터디룸의 과거 메시지 목록 가져오기 (lastMessageId 이후부터)
 export const getChatMessages = async (
-  roomId: number
+  roomId: number,
+  lastMessageId: number,
+  limit: number = 30
 ): Promise<ChatMessage[]> => {
+  console.log("lastMessageId: ", lastMessageId);
   const res = await api.get<ChatMessagesResponse>(
-    `/chat/rooms/${roomId}/messages`
+    `/chat/rooms/${roomId}/messages`,
+    {
+      params: {
+        limit,
+        // lastMessageId,
+      },
+    }
   );
   console.log(`💬 [${roomId}]번 방 메시지 목록:`, res.data.data);
   return res.data.data;
