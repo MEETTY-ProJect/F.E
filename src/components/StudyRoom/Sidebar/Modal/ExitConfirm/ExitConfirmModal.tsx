@@ -10,7 +10,7 @@ const ExitStudyRoomModal = ({ onClose }: ExitStudyRoomModalProps) => {
   const navigate = useNavigate();
 
   const handleConfirm = () => {
-    navigate("/"); // 홈으로 이동
+    navigate("/main"); // 홈으로 이동
   };
 
   const handleOverlayClick = () => {
