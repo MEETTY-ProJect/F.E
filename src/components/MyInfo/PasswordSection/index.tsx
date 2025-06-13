@@ -1,24 +1,45 @@
-// components/MyInfo/PasswordSection/index.tsx
 import React, { useState } from "react";
-import PasswordVerifier from "./PasswordVerifier";
-import NewPasswordInputs from "./NewPasswordInputs";
+import styles from "./PasswordSection.module.css";
+import PasswordEditModal from "./PasswordEditModal";
 
 interface PasswordSectionProps {
-  onPasswordChange: (newPassword: string) => void;
+  setMessage: (msg: string) => void;
 }
 
-const PasswordSection: React.FC<PasswordSectionProps> = ({
-  onPasswordChange,
-}) => {
-  const [verified, setVerified] = useState(false);
+const PasswordSection = ({ setMessage }: PasswordSectionProps) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isChanged, setIsChanged] = useState(false);
+
+  const handleSuccess = () => {
+    setIsChanged(true);
+    setIsModalOpen(false);
+  };
 
   return (
-    <div>
-      <PasswordVerifier
-        onSuccess={() => setVerified(true)}
-        disabled={verified}
-      />
-      {verified && <NewPasswordInputs onChange={onPasswordChange} />}
+    <div className={styles.block}>
+      <label>비밀번호</label>
+      <div className={styles.inline}>
+        <input
+          type="password"
+          value={isChanged ? "비밀번호가 수정되었습니다" : "********"}
+          readOnly
+          className={styles.input}
+        />
+        <button
+          className={styles.verifyButton}
+          onClick={() => setIsModalOpen(true)}
+        >
+          수정
+        </button>
+      </div>
+
+      {isModalOpen && (
+        <PasswordEditModal
+          onClose={() => setIsModalOpen(false)}
+          onSuccess={handleSuccess}
+          setMessage={setMessage}
+        />
+      )}
     </div>
   );
 };
