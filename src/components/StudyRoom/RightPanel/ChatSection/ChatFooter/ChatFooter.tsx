@@ -20,14 +20,6 @@ const ChatFooter = ({
   roomId,
   token,
 }: ChatFooterProps) => {
-  const handleSend = (text: string) => {
-    sendMessage({
-      type: "CHAT",
-      roomId,
-      token,
-      message: text,
-    });
-  };
   return (
     <div className={styles.footerContainer}>
       <DMSelector
@@ -35,7 +27,7 @@ const ChatFooter = ({
         DMUserList={DMUserList}
         onDMUserList={onDMUserList}
       />
-      <ChatInputBox onSend={handleSend} />
+      <ChatInputBox onSend={sendMessage} />
     </div>
   );
 };

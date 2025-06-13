@@ -11,6 +11,7 @@ const ChatInputBox = ({ onSend }: ChatInputBoxProps) => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim()) return;
+    console.log("작성한 메세지: ", input);
     onSend(input);
     setInput("");
   };

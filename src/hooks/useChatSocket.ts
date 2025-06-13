@@ -28,8 +28,11 @@ export function useChatSocket(
       console.error("❌ WebSocket 에러", err);
     };
 
-    ws.onclose = () => {
+    ws.onclose = (event) => {
       console.log("🔌 WebSocket 닫힘");
+      console.log("🔹 code:", event.code);
+      console.log("🔹 reason:", event.reason);
+      console.log("🔹 wasClean:", event.wasClean);
     };
 
     return () => {
@@ -39,7 +42,9 @@ export function useChatSocket(
 
   // 메시지 보낼 수 있게 함수 리턴
   const sendMessage = (msg: any) => {
+    console.log("sendMessage: ", msg);
     if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
+      console.log("socket message: ");
       socketRef.current.send(JSON.stringify(msg));
     }
   };
