@@ -1,15 +1,16 @@
-import  { JSX, useState } from "react";
+import type { JSX } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./Login.css";
 import GoogleLoginPage from "./GoogleLoginPage";
-import KakaoLoginButton from './KakaoLoginButton';
+import KakaoLoginButton from "./KakaoLoginButton";
 
 function Login(): JSX.Element {
   const navigate = useNavigate();
   const [userId, setUserId] = useState<string>("");
   const [password, setPassword] = useState<string>("");
 
-  const handleGoogleLogin = () => {
+  const handleGoogleLogin = (): void => {
     console.log("Google 로그인 실행!");
     // 실제 로그인 로직 추가
   };
@@ -28,7 +29,7 @@ function Login(): JSX.Element {
         },
         body: JSON.stringify({
           email: userId,
-          password: password,
+          password,
         }),
       });
 
@@ -37,7 +38,6 @@ function Login(): JSX.Element {
       if (result.isSuccess) {
         const { accessToken, email, username, address, profileImage, role } = result.data;
 
-        // 토큰과 유저정보 저장 (필요에 따라 localStorage나 상태관리로 옮길 수 있음)
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("email", email);
         localStorage.setItem("username", username);
@@ -46,7 +46,7 @@ function Login(): JSX.Element {
         localStorage.setItem("role", role);
 
         alert(`${username}님, 로그인 성공!`);
-        navigate("/main"); // 로그인 성공 후 메인 페이지로 이동
+        navigate("/main");
       } else {
         alert(result.errorCode?.message || "로그인에 실패했습니다.");
       }
@@ -82,16 +82,12 @@ function Login(): JSX.Element {
             로그인
           </button>
         </div>
-        
+
         <button className="Login_find">비밀번호 찾기</button>
-        <button
-          className="Login_signup"
-          onClick={() => navigate("/signup")}
-        >
+        <button className="Login_signup" onClick={() => navigate("/signup")}>
           회원가입
         </button>
 
-        {/* ▶ 소셜 로그인 버튼들 */}
         <div className="Login_social">
           <GoogleLoginPage onClick={handleGoogleLogin} />
           <KakaoLoginButton />
