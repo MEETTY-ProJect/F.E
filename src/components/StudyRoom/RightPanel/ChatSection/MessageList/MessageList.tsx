@@ -16,23 +16,26 @@ interface Message {
 }
 
 interface MessageListProps {
-  users: string[];
+  newMessages: Message[];
 }
 
-const MessageList = (/*{ users }: MessageListProps*/) => {
+const MessageList = ({ newMessages }: MessageListProps) => {
   const { roomId } = useParams<{ roomId: string }>();
   const { scrollRef, showScroll, handleWheel } = useSmartScrollbar();
+
   const [messages, setMessages] = useState<Message[]>([]);
   const [hasMore, setHasMore] = useState(true);
 
   const isFetching = useRef(false);
+  const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const fetchMessages = async () => {
     if (!roomId || isFetching.current || !hasMore) return;
     isFetching.current = true;
 
     try {
-      const data = await getChatMessages(Number(roomId));
+      const oldestId = messages[0]?.id ?? 999999999;
+      const data = await getChatMessages(Number(roomId), oldestId);
 
       if (data.length === 0) {
         setHasMore(false);
@@ -53,7 +56,12 @@ const MessageList = (/*{ users }: MessageListProps*/) => {
         })
       );
 
-      setMessages((prev) => [...transformed.reverse(), ...prev]);
+      setMessages((prev) => {
+        const combined = [...transformed.reverse(), ...prev];
+        const unique = new Map<number, Message>();
+        combined.forEach((msg) => unique.set(msg.id, msg));
+        return Array.from(unique.values());
+      });
     } catch (err) {
       console.error("메시지 불러오기 실패", err);
     } finally {
@@ -81,10 +89,10 @@ const MessageList = (/*{ users }: MessageListProps*/) => {
   }, [scrollRef, hasMore]);
 
   useEffect(() => {
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-    }
-  }, [messages]);
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [newMessages, messages]);
+
+  const allMessages = [...messages, ...newMessages];
 
   return (
     <div
@@ -99,8 +107,9 @@ const MessageList = (/*{ users }: MessageListProps*/) => {
           메시지가 없습니다.
         </p>
       ) : (
-        messages.map((msg) => <MessageItem key={msg.id} message={msg} />)
+        allMessages.map((msg) => <MessageItem key={msg.id} message={msg} />)
       )}
+      <div ref={bottomRef} />
     </div>
   );
 };

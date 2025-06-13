@@ -1,12 +1,22 @@
-import React from "react";
+import React, { useState } from "react";
 import ParticipantsList from "./ParticipantsList/ParticipantsList";
 import ChatSection from "./ChatSection";
 import styles from "./RightPanel.module.css";
 
 import testProfileImage from "@assets/사회력소진짤.png";
+import { useChatSocket } from "../../../hooks/useChatSocket";
+import { useParams } from "react-router";
 
 interface PanelProps {
   isOpen: boolean;
+}
+
+interface Message {
+  id: number;
+  user: string;
+  profile: string | null;
+  content: string;
+  time: string;
 }
 
 // ✅ 더미 데이터: 참여자 목록
@@ -27,26 +37,33 @@ const participants = [
   { name: "귀엽다 도구리!!", profile: testProfileImage, isLeader: false },
 ];
 
-// ✅ 채팅 메시지 더미 데이터
-const chatMessages = [
-  {
-    id: 1,
-    user: "오늘도 고생 많았어요!",
-    profile: testProfileImage,
-    content:
-      "어제 하루 고생했잖아요! 오늘도 화이팅 해보자! 마지막까지 화이팅!!",
-    time: "09:30",
-  },
-  {
-    id: 2,
-    user: "도구리",
-    profile: testProfileImage,
-    content: "도구리는 너구리랑 귀엽고 편해지짛!",
-    time: "09:31",
-  },
-];
-
 const RightPanel = ({ isOpen }: PanelProps) => {
+  const { roomId } = useParams<{ roomId: string }>();
+  const token = localStorage.getItem("accessToken") || "";
+  const [messages, setMessages] = useState<Message[]>([]);
+
+  const handleNewMessage = (data: any) => {
+    const newMessage: Message = {
+      id: data.messageId,
+      user: data.username,
+      profile: data.profileImage ?? null,
+      content: data.message,
+      time: new Date(data.createdAt).toLocaleTimeString("ko-KR", {
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: false,
+      }),
+    };
+
+    setMessages((prev) =>
+      prev.find((msg) => msg.id === newMessage.id)
+        ? prev
+        : [...prev, newMessage]
+    );
+  };
+
+  const { sendMessage } = useChatSocket(roomId || "", token, handleNewMessage);
+
   if (!isOpen) return null;
 
   return (
@@ -61,8 +78,11 @@ const RightPanel = ({ isOpen }: PanelProps) => {
         <div className={styles.sectionTitle}>채팅</div>
         <div className={styles.sectionContent}>
           <ChatSection
-            messages={chatMessages}
             users={participants.map((p) => p.name)}
+            messages={messages}
+            sendMessage={sendMessage}
+            roomId={roomId || ""}
+            token={token}
           />
         </div>
       </div>
