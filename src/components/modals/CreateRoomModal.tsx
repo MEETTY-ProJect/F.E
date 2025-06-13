@@ -1,18 +1,26 @@
 import React, { useState, ChangeEvent } from 'react';
 import { fetchStudyRooms } from '../pages/StudyGroupList';
 
+interface RoomData {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  maxPeople: string;
+  purpose: string;
+  region: string;
+}
+
 interface CreateRoomModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreate: (room: {
-    id: number;
-    title: string;
-    description: string;
-    image: string;
-    maxPeople: string;
-    purpose: string;
-    region: string;
-  }) => void;
+  onCreate: (room: RoomData) => void;   // 여기를 수정
+  purposes: string[];
+  regions: string[];
+  maxPeopleOptions: number[];
+  selectedPurpose: string | null;
+  selectedRegion: string | null;
+  selectedMaxPeople: number | null;
 }
 
 function CreateRoomModal({ isOpen, onClose, onCreate }: CreateRoomModalProps) {
@@ -177,10 +185,10 @@ function CreateRoomModal({ isOpen, onClose, onCreate }: CreateRoomModalProps) {
         id: createdRoom.id,
         title: createdRoom.roomName,
         description: createdRoom.introduction,
-        image: selectedImage,
-        maxPeople: `${createdRoom.capacity}명`,
-        purpose,
-        region,
+        image: selectedImage,            // 사용자가 선택한 이미지
+        maxPeople: `${createdRoom.capacity}명`,  // 인원수
+        purpose,                        // 사용자가 선택한 목적
+        region,                        // 사용자가 선택한 지역
       });
   
       // 초기화
@@ -201,26 +209,26 @@ function CreateRoomModal({ isOpen, onClose, onCreate }: CreateRoomModalProps) {
   return (
     <div className="create-overlay" onClick={onClose}>
       <div className="create-modal-content" onClick={(e) => e.stopPropagation()}>
-        <div className="create-text">
-          <h3>스터디 방 생성</h3>
-          <div className="filter-line"></div>
+      <div className="create-text">
+        <h3>스터디 방 생성</h3>
+        <div className="filter-line"></div>
         </div>
         <div className="create-roomtitle">
           스터디방 이름
           <input
-            type="text"
-            placeholder="스터디 방 이름을 입력하세요."
-            value={roomTitle}
-            onChange={(e) => setRoomTitle(e.target.value)}
+          type="text"
+          placeholder="스터디 방 이름을 입력하세요."
+          value={roomTitle}
+          onChange={(e) => setRoomTitle(e.target.value)}
           />
         </div>
 
         <div className="create-explanation">
           설명
           <textarea
-            placeholder="스터디 방 설명 및 공지사항을 입력하세요"
-            value={roomDescription}
-            onChange={(e) => setRoomDescription(e.target.value)}
+          placeholder="스터디 방 설명 및 공지사항을 입력하세요"
+          value={roomDescription}
+          onChange={(e) => setRoomDescription(e.target.value)}
           />
         </div>
 
@@ -234,52 +242,40 @@ function CreateRoomModal({ isOpen, onClose, onCreate }: CreateRoomModalProps) {
             style={{ display: "none" }}
             onChange={handleImageChange}
           />
-          <button
-            onClick={() => document.getElementById("profile-image-upload")?.click()}
-            className="profile-select-button"
+          <button onClick={() => document.getElementById("profile-image-upload")?.click()}
+          className="profile-select-button"
           >
             찾기
           </button>
         </div>
 
         <div className="maximum-people">최대 인원 수</div>
-        <select
-  className="peoplecount"
-  value={maxPeople}
-  onChange={(e) => setMaxPeople(e.target.value)}
->
-  <option value="">인원 선택</option>
-  {options.map((num) => (
-    <option key={num} value={num.toString()}>{num}명</option>
-  ))}
-</select>
-
+        <select className="peoplecount" value={maxPeople} onChange={(e) => setMaxPeople(e.target.value)}>
+          <option value="">인원 선택</option>
+          {options.map((num) => (
+            <option key={num} value={`${num}명`}>{num}명</option>
+          ))}
+        </select>
 
         <div className="purpose-select">목적</div>
-        <select
-          className="purpose-category"
-          value={purpose}
-          onChange={(e) => setPurpose(e.target.value)}
-        >
+        <select className="purpose-category" value={purpose} onChange={(e) => setPurpose(e.target.value)}>
           {categories.map((cat) => (
             <option key={cat} value={cat}>{cat}</option>
           ))}
         </select>
 
         <div className="region-select">지역</div>
-        <select
-          className="region-category"
-          value={region}
-          onChange={(e) => setRegion(e.target.value)}
-        >
+        <select className="region-category" value={region} onChange={(e) => setRegion(e.target.value)}>
           {regions.map((reg) => (
             <option key={reg} value={reg}>{reg}</option>
           ))}
         </select>
 
         <div className="create-buttons">
-          <button className="create-buttons-cancel" onClick={handleCancelCreate}>취소</button>
-          <button className="create-buttons-close" onClick={handleCreate}>생성</button>
+          <button className="create-buttons-cancel" 
+          onClick={handleCancelCreate}>취소</button>
+          <button className="create-buttons-close" 
+          onClick={handleCreate}>생성</button>
         </div>
       </div>
     </div>

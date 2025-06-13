@@ -1,11 +1,30 @@
-import { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import "../pages/MainPage.css";
 import FilterModal from "../modals/FilterModal";
 import CreateRoomModal from "../modals/CreateRoomModal";
 import ApprovalRequestModal from "../modals/ApprovalRequestModal";
 import { logout } from "../utils/logout";
+import MainAlarm from "../modals/MainAlarm";
+import axios from "axios";
+
+interface RoomData {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  maxPeople: string;
+  purpose: string;
+  region: string;
+}
 
 function MainPage() {
+  // 필터 옵션 상수 (예시)
+  const purposes = ["공부", "취미", "운동", "프로젝트"];
+  const regions = ["서울", "부산", "대전", "광주"];
+  const maxPeopleOptions = [4, 6, 8, 10];
+
+  // 모달, 유저 정보 등 상태
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isApprovalModalOpen, setIsApprovalModalOpen] = useState(false);
@@ -14,20 +33,65 @@ function MainPage() {
     profileImageUrl: "",
     nickname: "",
   });
+
+  // 검색어 상태
   const [searchText, setSearchText] = useState("");
-  const [results, setResults] = useState<any[]>([]);
+
+  const [rooms, setRooms] = useState<RoomData[]>([]);
+
+  // CreateRoomModal onCreate 콜백
+  const handleRoomCreate = (newRoom: RoomData) => {
+    setRooms((prevRooms) => [newRoom, ...prevRooms]);
+  };
+
+  // 스터디방 리스트 상태
   const [studyRooms, setStudyRooms] = useState<any[]>([]);
-  const [refreshListTrigger, setRefreshListTrigger] = useState(0);
-
+  const [totalPages, setTotalPages] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-  const [fade, setFade] = useState(false);
+  const [refreshListTrigger, setRefreshListTrigger] = useState(0);
   const roomsPerPage = 6;
+  const [fade, setFade] = useState(false);
 
-  const indexOfLastRoom = currentPage * roomsPerPage;
-  const indexOfFirstRoom = indexOfLastRoom - roomsPerPage;
-  const currentRooms = results.slice(indexOfFirstRoom, indexOfLastRoom);
-  const totalPages = Math.ceil(results.length / roomsPerPage);
+  // 방 생성 시 초기 필터값 상태 (랜덤값으로 초기화)
+  const [selectedPurpose, setSelectedPurpose] = useState<string | null>(null);
+  const [selectedRegion, setSelectedRegion] = useState<string | null>(null);
+  const [selectedMaxPeople, setSelectedMaxPeople] = useState<number | null>(
+    null
+  );
 
+  // API에서 스터디방 데이터 가져오기
+  const fetchStudyRooms = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `http://34.64.218.29:8080/api/v1/board?page=${
+          currentPage - 1
+        }&size=${roomsPerPage}`,
+        { withCredentials: true }
+      );
+
+      if (response.data.isSuccess) {
+        const { studyGroups, totalPages } = response.data.data;
+        setStudyRooms(studyGroups);
+        setTotalPages(totalPages);
+      }
+    } catch (error) {
+      console.error("스터디방 목록을 불러오는데 실패했습니다:", error);
+    }
+  }, [currentPage]);
+
+  useEffect(() => {
+    fetchStudyRooms();
+  }, [fetchStudyRooms, refreshListTrigger]);
+
+  // 유저 정보 초기화
+  useEffect(() => {
+    const nickname = localStorage.getItem("username") || "사용자";
+    const profileImageUrl =
+      localStorage.getItem("profileImage") || "/default-profile.png";
+    setUserInfo({ nickname, profileImageUrl });
+  }, []);
+
+  // 페이지 변경 시 fade 효과 주기
   const changePage = (pageNumber: number) => {
     setFade(true);
     setTimeout(() => {
@@ -36,65 +100,43 @@ function MainPage() {
     }, 300);
   };
 
+  // 승인 요청 모달 열기
   const openApprovalModal = (room: any) => {
     setSelectedRoom(room);
     setIsApprovalModalOpen(true);
   };
 
-  const fetchStudyRooms = useCallback(async () => {
-    try {
-      const res = await fetch("http://34.64.218.29:8080/api/v1/board/create", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+  // 랜덤값 선택 함수
+  function getRandomItem<T>(arr: T[]): T {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
 
-      if (!res.ok) throw new Error("스터디방 목록 불러오기 실패");
-
-      const data = await res.json();
-      setStudyRooms(data.result.content);
-      setResults(data.result.content);
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
-
-  useEffect(() => {
-    fetchStudyRooms();
-  }, [fetchStudyRooms, refreshListTrigger]);
-
-  useEffect(() => {
-    const nickname = localStorage.getItem("username") || "사용자";
-    const profileImageUrl =
-      localStorage.getItem("profileImage") || "/default-profile.png";
-    setUserInfo({ nickname, profileImageUrl });
-  }, []);
-
-  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const lowerText = searchText.toLowerCase().trim();
-
-    const matchIndexes = studyRooms
-      .map((room, index) =>
-        (room.title?.toLowerCase().includes(lowerText) ?? false) ||
-        (room.category?.toLowerCase().includes(lowerText) ?? false)
-          ? index
-          : -1
-      )
-      .filter((i) => i !== -1);
-
-    if (matchIndexes.length > 0) {
-      const middleMatchIndex =
-        matchIndexes[Math.floor(matchIndexes.length / 2)];
-      const targetPage = Math.floor(middleMatchIndex / roomsPerPage) + 1;
-      setCurrentPage(targetPage);
-      setResults(studyRooms);
-    } else {
-      setResults([]);
-    }
-
-    setSearchText("");
+  // 방 생성 모달 열 때 랜덤 필터 초기화 (한 번만)
+  const openCreateModal = () => {
+    setSelectedPurpose(getRandomItem(purposes));
+    setSelectedRegion(getRandomItem(regions));
+    setSelectedMaxPeople(getRandomItem(maxPeopleOptions));
+    setIsCreateModalOpen(true);
   };
+
+  // 방 생성 완료 핸들러 (랜덤 초기화 없이 모달 닫고 리스트 갱신)
+  const handleCreate = () => {
+    setRefreshListTrigger((prev) => prev + 1);
+    setIsCreateModalOpen(false);
+  };
+
+  // 검색 폼 제출 핸들러 (페이지 1로 초기화)
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    setCurrentPage(1);
+  };
+
+  // 검색어에 맞는 방만 필터링해서 화면에 보여줄 배열
+  const displayedRooms = studyRooms.filter(
+    (room) =>
+      room.roomName?.toLowerCase().includes(searchText.toLowerCase()) ||
+      room.purpose?.toLowerCase().includes(searchText.toLowerCase())
+  );
 
   return (
     <div>
@@ -108,27 +150,50 @@ function MainPage() {
               value={searchText}
               onChange={(e) => setSearchText(e.target.value)}
             />
-            <button type="submit" className="main-search-btn" aria-label="검색">
-              <span className="visually-hidden">검색</span>
-            </button>
+            <button
+              type="submit"
+              className="main-search-btn"
+              aria-label="검색"
+            ></button>
           </div>
         </form>
       </div>
 
-      {/* 필터 및 방 생성 */}
+      {/* 필터 및 방 생성 버튼 */}
       <div className="main-button">
         <button className="main-filter" onClick={() => setIsFilterOpen(true)}>
           필터
         </button>
-        <div
-          className="main-createroom"
-          onClick={() => setIsCreateModalOpen(true)}
-        >
+        <div className="main-createroom" onClick={openCreateModal}>
           방 생성
         </div>
       </div>
 
-      {/* 모달 컴포넌트들 */}
+      {/* 스터디방 리스트 (검색 결과 기준) */}
+      <div className={`grid-container ${fade ? "fade-out" : "fade-in"}`}>
+        {displayedRooms.length > 0 ? (
+          displayedRooms.map((room: any, i: number) => (
+            <div
+              key={i}
+              className="grid-room"
+              onClick={() => openApprovalModal(room)}
+            >
+              <img
+                src={room.imageUrl || "/profileC.png"}
+                alt={room.roomName}
+                className="room-profile-img"
+              />
+              <div className="room-label">{room.roomName}</div>
+            </div>
+          ))
+        ) : (
+          <p style={{ textAlign: "center", marginTop: "20px" }}>
+            검색 결과가 없습니다.
+          </p>
+        )}
+      </div>
+
+      {/* 모달 */}
       <FilterModal
         isFilterOpen={isFilterOpen}
         closeFilter={() => setIsFilterOpen(false)}
@@ -136,38 +201,19 @@ function MainPage() {
       <CreateRoomModal
         isOpen={isCreateModalOpen}
         onClose={() => setIsCreateModalOpen(false)}
-        onCreate={(room) => {
-          const newRooms = [...studyRooms, room];
-          setStudyRooms(newRooms);
-          setResults(newRooms);
-          setCurrentPage(Math.ceil(newRooms.length / roomsPerPage));
-        }}
+        onCreate={handleCreate}
+        purposes={purposes}
+        regions={regions}
+        maxPeopleOptions={maxPeopleOptions}
+        selectedPurpose={selectedPurpose}
+        selectedRegion={selectedRegion}
+        selectedMaxPeople={selectedMaxPeople}
       />
       <ApprovalRequestModal
         isOpen={isApprovalModalOpen}
         onClose={() => setIsApprovalModalOpen(false)}
         room={selectedRoom}
       />
-
-      {/* 스터디방 리스트 */}
-      <div className={`grid-container ${fade ? "fade-out" : ""}`}>
-        {results.length === 0 ? (
-          <div className="no-results-message">
-            스터디방이 존재하지 않습니다.
-          </div>
-        ) : (
-          currentRooms.map((room: any, i: number) => (
-            <div
-              key={i}
-              className="grid-room"
-              onClick={() => openApprovalModal(room)}
-            >
-              <img src={room.image} alt="Room" className="room-profile-img" />
-              <div className="room-label">{room.title}</div>
-            </div>
-          ))
-        )}
-      </div>
 
       {/* 페이지네이션 */}
       {totalPages > 1 && (

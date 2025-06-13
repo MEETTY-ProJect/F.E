@@ -131,13 +131,7 @@ const Contents: React.FC = () => {
               }
             />
 
-            <PasswordSection
-              onPasswordChange={(newPassword) =>
-                setFormData((prev) =>
-                  prev ? { ...prev, password: newPassword } : prev
-                )
-              }
-            />
+            <PasswordSection setMessage={setMessageModal} />
 
             <AddressSelector
               value={formData.address}
