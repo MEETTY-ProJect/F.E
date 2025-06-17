@@ -3,7 +3,7 @@ import Header from "../StudyRoom/Header";
 import Sidebar from "../StudyRoom/Sidebar";
 import MainContent from "../StudyRoom/MainContent";
 import RightPanel from "../StudyRoom/RightPanel";
-import styles from "./styles/MyStudyRooms.module.css";
+import styles from "./StudyRoomPage.module.css";
 import { getStudyRoomDetail, StudyRoomInfo } from "../../api/studyroomInfo.api";
 import { useParams } from "react-router";
 
