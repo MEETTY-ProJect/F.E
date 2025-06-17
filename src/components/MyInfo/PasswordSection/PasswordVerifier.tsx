@@ -1,9 +1,9 @@
-// components/MyInfo/PasswordSection/PasswordVerifier.tsx
 import React, { useState } from "react";
 import styles from "./PasswordSection.module.css";
+import { verifyCurrentPassword } from "../../../api/verifyCurrentPassword.api";
 
 interface PasswordVerifierProps {
-  onSuccess: () => void;
+  onSuccess: (password: string) => void; // ✅ password 전달
   disabled?: boolean;
 }
 
@@ -15,17 +15,12 @@ const PasswordVerifier: React.FC<PasswordVerifierProps> = ({
   const [error, setError] = useState("");
 
   const handleVerify = async () => {
-    try {
-      // ❗ 실제 비밀번호 검증 API 요청으로 대체
-      const isCorrect = password === "1234"; // 더미 검증
-      if (isCorrect) {
-        setError("");
-        onSuccess();
-      } else {
-        setError("비밀번호가 일치하지 않습니다.");
-      }
-    } catch {
-      setError("서버 오류가 발생했습니다.");
+    const isCorrect = await verifyCurrentPassword(password);
+    if (isCorrect) {
+      setError("");
+      onSuccess(password); // ✅ 인자 전달 필수
+    } else {
+      setError("비밀번호가 일치하지 않습니다.");
     }
   };
 

@@ -1,9 +1,12 @@
-// components/MyInfo/PasswordSection/NewPasswordInputs.tsx
 import React, { useState, useEffect } from "react";
 import styles from "./PasswordSection.module.css";
 
 interface NewPasswordInputsProps {
-  onChange: (newPassword: string) => void;
+  onChange: (
+    newPassword: string,
+    confirmPassword: string,
+    isMatch: boolean
+  ) => void;
 }
 
 const NewPasswordInputs: React.FC<NewPasswordInputsProps> = ({ onChange }) => {
@@ -12,12 +15,13 @@ const NewPasswordInputs: React.FC<NewPasswordInputsProps> = ({ onChange }) => {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (newPassword && confirmPassword && newPassword !== confirmPassword) {
-      setError("새 비밀번호가 일치하지 않습니다.");
-    } else {
-      setError("");
-    }
-    onChange(newPassword);
+    const isMatch =
+      newPassword.length > 0 &&
+      confirmPassword.length > 0 &&
+      newPassword === confirmPassword;
+
+    setError(isMatch ? "" : "새 비밀번호가 일치하지 않습니다.");
+    onChange(newPassword, confirmPassword, isMatch);
   }, [newPassword, confirmPassword, onChange]);
 
   return (
