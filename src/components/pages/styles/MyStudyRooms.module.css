@@ -1,4 +1,13 @@
 .container {
+  display: flex;
+  flex-direction: column;
   height: 100vh;
-  overflow-y: auto;
+  background-color: #f5f7fa; /* 전체 배경 */
+}
+
+.body {
+  display: flex;
+  justify-content: space-between;
+  flex: 1;
+  overflow: hidden;
 }

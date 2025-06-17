@@ -79,15 +79,15 @@ const Contents: React.FC = () => {
         payload.append("profileImage", formData.profileImage);
       }
 
-      for (const [key, value] of payload.entries()) {
-        if (value instanceof Blob) {
-          value
-            .text()
-            .then((text) => console.log("📦", key, "→ Blob contents:", text));
-        } else {
-          console.log("📦", key, "→", value);
-        }
-      }
+      // for (const [key, value] of payload.entries()) {
+      //   if (value instanceof Blob) {
+      //     value
+      //       .text()
+      //       .then((text) => console.log("📦", key, "→ Blob contents:", text));
+      //   } else {
+      //     console.log("📦", key, "→", value);
+      //   }
+      // }
 
       // ✅ 이미지도 항상 전송 (string이든 File이든 일단 보내보기)
       // if (formData.profileImage instanceof File) {
