@@ -12,8 +12,13 @@
   border: 1px solid #ccc;
 }
 
-.changeButton {
+.buttonGroup {
+  display: flex;
   margin-top: 1rem;
+  gap: 0.5rem;
+}
+
+.changeButton {
   padding: 0.5rem 1rem;
   background-color: var(--button-color);
   color: white;

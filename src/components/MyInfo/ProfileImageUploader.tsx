@@ -1,9 +1,10 @@
 import React, { useRef } from "react";
 import styles from "./ProfileImageUploader.module.css";
+import resetImage from "@assets/profile.jpeg";
 
 interface ProfileImageUploaderProps {
   profileImage: string | File | null;
-  onImageChange: (file: File) => void;
+  onImageChange: (file: File | null) => void;
 }
 
 const ProfileImageUploader = ({
@@ -15,17 +16,27 @@ const ProfileImageUploader = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      onImageChange(file);
+      // ✅ 파일명 공백 → 밑줄로 정리
+      const sanitizedFileName = file.name.replace(/\s+/g, "_");
+      const sanitizedFile = new File([file], sanitizedFileName, {
+        type: file.type,
+      });
+      console.log("profileImage: ", sanitizedFile);
+      onImageChange(sanitizedFile);
     }
   };
 
-  const handleClick = () => {
+  const handleResetClick = () => {
+    onImageChange(null);
+  };
+
+  const handleChangeClick = () => {
     fileInputRef.current?.click();
   };
 
   const imageUrl =
     profileImage === null
-      ? null
+      ? resetImage
       : typeof profileImage === "string"
       ? profileImage
       : URL.createObjectURL(profileImage);
@@ -44,9 +55,14 @@ const ProfileImageUploader = ({
         onChange={handleFileChange}
         style={{ display: "none" }}
       />
-      <button onClick={handleClick} className={styles.changeButton}>
-        이미지 변경
-      </button>
+      <div className={styles.buttonGroup}>
+        <button onClick={handleResetClick} className={styles.changeButton}>
+          기본 이미지
+        </button>
+        <button onClick={handleChangeClick} className={styles.changeButton}>
+          이미지 변경
+        </button>
+      </div>
     </div>
   );
 };
