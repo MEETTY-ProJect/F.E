@@ -8,7 +8,7 @@ import AddressSelector from "./AddressSelector";
 import ResetConfirmModal from "./Modal/ResetConfirmModal";
 import WithdrawalConfirmModal from "./Modal/WithdrawalConfirmModal";
 import SaveConfirmModal from "./Modal/SaveConfirmModal";
-import MessageModal from "./Modal/MessageModal";
+import MessageModal from "../common/MessageModal";
 import { getUserInfo } from "../../api/user.api";
 import { type UserInfo, updateUserInfo } from "../../api/user.api";
 
@@ -60,16 +60,42 @@ const Contents: React.FC = () => {
       const dto = {
         username: formData.username,
         address: formData.address,
+        resetImage: formData.resetImage ?? false,
       };
 
-      payload.append("updateUserDto", JSON.stringify(dto));
+      const jsonBlob = new Blob([JSON.stringify(dto)], {
+        type: "application/json",
+      });
+      payload.append("updatedUserInfo", jsonBlob);
+
+      // payload.append("updatedUserInfo", JSON.stringify(dto));
+
+      // ✅ "resetImage: true"일 땐 절대 이미지 전송하지 않기
+      // if (!dto.resetImage && formData.profileImage instanceof File) {
+      //   payload.append("profileImage", formData.profileImage);
+      // }
+
+      if (formData?.profileImage) {
+        payload.append("profileImage", formData.profileImage);
+      }
+
+      for (const [key, value] of payload.entries()) {
+        if (value instanceof Blob) {
+          value
+            .text()
+            .then((text) => console.log("📦", key, "→ Blob contents:", text));
+        } else {
+          console.log("📦", key, "→", value);
+        }
+      }
 
       // ✅ 이미지도 항상 전송 (string이든 File이든 일단 보내보기)
-      if (formData.profileImage instanceof File) {
-        payload.append("profileImage", formData.profileImage);
-      } else {
-        payload.append("profileImage", ""); // ✅ 빈 문자열로 전송
-      }
+      // if (formData.profileImage instanceof File) {
+      //   console.log("파일 이름:", formData.profileImage.name);
+      //   console.log("파일 타입:", formData.profileImage.type);
+      //   console.log("파일 크기:", formData.profileImage.size);
+      //   payload.append("profileImage", formData.profileImage);
+      // }
 
       const res = await updateUserInfo(payload);
 
@@ -102,8 +128,24 @@ const Contents: React.FC = () => {
     setMessageModal("취소되었습니다.");
   };
 
-  const handleImageChange = (file: File) => {
-    setFormData((prev) => (prev ? { ...prev, profileImage: file } : prev));
+  const handleImageChange = (file: File | null) => {
+    if (file) {
+      // 새 이미지 업로드
+      const sanitizedFileName = file.name.replace(/\s+/g, "_");
+      const sanitizedFile = new File([file], sanitizedFileName, {
+        type: file.type,
+      });
+      setFormData((prev) =>
+        prev
+          ? { ...prev, profileImage: sanitizedFile, resetImage: false }
+          : prev
+      );
+    } else {
+      // 기본 이미지로 재설정
+      setFormData((prev) =>
+        prev ? { ...prev, profileImage: null, resetImage: true } : prev
+      );
+    }
   };
 
   return (
