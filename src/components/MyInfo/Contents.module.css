@@ -34,21 +34,26 @@
 
 .buttonGroup {
   display: flex;
+  justify-content: space-between;
   gap: 1rem;
-  margin-top: 1rem;
+  margin-top: 2rem;
 }
 
 .resetButton,
 .saveButton,
 .deleteButton {
-  padding: 0.5rem 1rem;
+  padding: 0.8rem 2.5rem;
   border: none;
   cursor: pointer;
   border-radius: 5px;
+  font-size: 0.9rem;
+
+  background-color: var(--button-color);
 }
 
-.resetButton {
-  background-color: var(--button-color);
+.resetButton:hover {
+  background-color: var(--subText-color);
+  color: white;
 }
 
 .saveButton {
@@ -56,6 +61,15 @@
   color: white;
 }
 
+.saveButton:hover {
+  background-color: var(--main-color);
+}
+
 .deleteButton {
   background-color: #ffb3b3;
+  color: white;
+}
+
+.deleteButton:hover {
+  background-color: var(--error-color);
 }

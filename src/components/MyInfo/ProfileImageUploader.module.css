@@ -21,7 +21,6 @@
 .changeButton {
   padding: 0.5rem 1rem;
   background-color: var(--button-color);
-  color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
@@ -29,4 +28,5 @@
 
 .changeButton:hover {
   background-color: var(--main-color);
+  color: white;
 }
