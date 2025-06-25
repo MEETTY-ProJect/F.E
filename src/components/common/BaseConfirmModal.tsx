@@ -5,6 +5,7 @@ interface BaseConfirmModalProps {
   children: React.ReactNode;
   onConfirm: () => void;
   onCancel: () => void;
+  hideButtons?: boolean;
 }
 
 const BaseConfirmModal = ({
@@ -15,7 +16,8 @@ const BaseConfirmModal = ({
   return (
     <div className={styles.overlay}>
       <div className={styles.modal}>
-        <div>{children}</div>
+        <div className={styles.children}>{children}</div>
+
         <div className={styles.buttons}>
           <button onClick={onConfirm}>확인</button>
           <button onClick={onCancel}>취소</button>
