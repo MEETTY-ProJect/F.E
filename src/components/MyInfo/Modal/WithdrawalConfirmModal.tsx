@@ -9,7 +9,7 @@ interface Props {
 const WithdrawalConfirmModal = ({ onConfirm, onCancel }: Props) => {
   return (
     <BaseConfirmModal onConfirm={onConfirm} onCancel={onCancel}>
-      <p>정말 탈퇴하시겠습니까?</p>
+      <p>진짜 정말로 탈퇴하시겠습니까😢?</p>
     </BaseConfirmModal>
   );
 };

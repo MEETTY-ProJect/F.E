@@ -1,16 +1,24 @@
-// components/MyInfo/Contents.tsx
+// 📦 React & CSS
 import React, { useEffect, useState } from "react";
 import styles from "./Contents.module.css";
+
+// 🧩 섹션 컴포넌트
 import NicknameInput from "./NicknameInput";
 import ProfileImageUploader from "./ProfileImageUploader";
 import PasswordSection from "./PasswordSection";
 import AddressSelector from "./AddressSelector";
+
+// 🧾 모달 컴포넌트
 import ResetConfirmModal from "./Modal/ResetConfirmModal";
 import WithdrawalConfirmModal from "./Modal/WithdrawalConfirmModal";
 import SaveConfirmModal from "./Modal/SaveConfirmModal";
+import WithdrawalPasswordModal from "./Modal/WithdrawalPasswordModal";
 import MessageModal from "../common/MessageModal";
+
+// 📡 API 호출
 import { getUserInfo } from "../../api/user.api";
 import { type UserInfo, updateUserInfo } from "../../api/user.api";
+import { withdrawAccount } from "../../api/withdrawal.api";
 
 const Contents: React.FC = () => {
   const [user, setUser] = useState<UserInfo | null>(null);
@@ -20,8 +28,10 @@ const Contents: React.FC = () => {
   const [showResetModal, setShowResetModal] = useState(false);
   const [showWithdrawalModal, setShowWithdrawalModal] = useState(false);
   const [showSaveModal, setShowSaveModal] = useState(false);
+  const [showPasswordModal, setShowPasswordModal] = useState(false);
   const [messageModal, setMessageModal] = useState("");
   const [error, setError] = useState<Error | null>(null);
+  const [passwordForWithdrawal, setPasswordForWithdrawal] = useState("");
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -63,10 +73,13 @@ const Contents: React.FC = () => {
         resetImage: formData.resetImage ?? false,
       };
 
-      const jsonBlob = new Blob([JSON.stringify(dto)], {
-        type: "application/json",
-      });
-      payload.append("updatedUserInfo", jsonBlob);
+      // ✅ JSON을 string으로 변환해서 append
+      payload.append("updateUserDto", JSON.stringify(dto));
+
+      // ✅ 이미지가 있을 때만 전송
+      if (formData.profileImage) {
+        payload.append("profileImage", formData.profileImage);
+      }
 
       // payload.append("updatedUserInfo", JSON.stringify(dto));
 
@@ -74,10 +87,6 @@ const Contents: React.FC = () => {
       // if (!dto.resetImage && formData.profileImage instanceof File) {
       //   payload.append("profileImage", formData.profileImage);
       // }
-
-      if (formData?.profileImage) {
-        payload.append("profileImage", formData.profileImage);
-      }
 
       // for (const [key, value] of payload.entries()) {
       //   if (value instanceof Blob) {
@@ -115,17 +124,56 @@ const Contents: React.FC = () => {
   const handleSaveCancel = () => setShowSaveModal(false);
 
   // 메시지 모달 닫기
-  const handleMessageClose = () => setMessageModal("");
+  const handleMessageClose = () => {
+    const shouldRedirect = messageModal === "탈퇴되었습니다.";
+
+    setMessageModal(""); // 먼저 모달 닫기
+
+    if (shouldRedirect) {
+      // ✅ 모달이 닫히고 리렌더링된 다음 이동
+      setTimeout(() => {
+        window.location.href = "/login";
+      }, 0); // 0ms도 충분. 렌더 사이클 뒤에 실행됨
+    }
+  };
 
   // 탈퇴
-  const handleWithdrawal = () => setShowWithdrawalModal(true);
-  const handleWithdrawalConfirm = () => {
-    setShowWithdrawalModal(false);
-    setMessageModal("탈퇴되었습니다.");
+  const handleWithdrawal = () => setShowPasswordModal(true);
+  const handlePasswordSuccess = (password: string) => {
+    setPasswordForWithdrawal(password);
+    setShowPasswordModal(false);
+    setShowWithdrawalModal(true);
+  };
+  const handleWithdrawalConfirm = async () => {
+    try {
+      if (!passwordForWithdrawal) {
+        setMessageModal("비밀번호가 없습니다.");
+        setShowWithdrawalModal(false);
+        return;
+      }
+
+      const isSuccess = await withdrawAccount(passwordForWithdrawal);
+
+      if (isSuccess) {
+        // ✅ 토큰 삭제
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+
+        // ✅ 리다이렉트 및 새로고침
+        setMessageModal("탈퇴되었습니다.");
+      } else {
+        setMessageModal("탈퇴에 실패했습니다.");
+      }
+    } catch (err) {
+      console.error("회원 탈퇴 중 오류:", err);
+      setMessageModal("오류가 발생했습니다. 다시 시도해주세요.");
+    } finally {
+      setShowWithdrawalModal(false);
+    }
   };
   const handleWithdrawalCancel = () => {
     setShowWithdrawalModal(false);
-    setMessageModal("취소되었습니다.");
+    setMessageModal("탈퇴 취소되었습니다.");
   };
 
   const handleImageChange = (file: File | null) => {
@@ -215,6 +263,13 @@ const Contents: React.FC = () => {
         <SaveConfirmModal
           onConfirm={handleSaveConfirm}
           onCancel={handleSaveCancel}
+        />
+      )}
+
+      {showPasswordModal && (
+        <WithdrawalPasswordModal
+          onSuccess={handlePasswordSuccess}
+          onCancel={() => setShowPasswordModal(false)}
         />
       )}
 
