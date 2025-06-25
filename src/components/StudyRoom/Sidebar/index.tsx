@@ -9,8 +9,8 @@ import userPlusImage from "@assets/user-plus.svg";
 import StudyRoomSettingModal, {
   type StudyRoomValues,
 } from "./Modal/StudyRoomSetting/StudyRoomSettingModal";
-import StudyRoomMemberModal from "./Modal/StudyRoomMember/StudyRoomMemberModal";
-import ApproveRequestModal from "./Modal/ApproveRequest/ApproveRequestModal";
+import MemberModal from "./Modal/MemberModal/MemberModal";
+import JoinRequestModal from "./Modal/JoinRequestModal/JoinRequestModal";
 import ExitConfirmModal from "./Modal/ExitConfirm/ExitConfirmModal";
 import { StudyRoomInfo } from "../../../api/studyroomInfo.api";
 
@@ -84,12 +84,8 @@ export default function Sidebar({ roomInfo }: SidebarProps) {
           onDelete={handleDelete} // 삭제 버튼 클릭 시
         />
       )}
-      {activeModal === "member" && (
-        <StudyRoomMemberModal onClose={handleClose} />
-      )}
-      {activeModal === "approve" && (
-        <ApproveRequestModal onClose={handleClose} />
-      )}
+      {activeModal === "member" && <MemberModal onClose={handleClose} />}
+      {activeModal === "approve" && <JoinRequestModal onClose={handleClose} />}
       {activeModal === "exit" && <ExitConfirmModal onClose={handleClose} />}
     </>
   );

@@ -1,0 +1,22 @@
+.approveBtn,
+.rejectBtn {
+  padding: 0.3rem 1.2rem;
+  border-radius: 6px;
+  color: white;
+  opacity: 0.8;
+  border: none;
+  cursor: pointer;
+}
+
+.approveBtn {
+  background-color: var(--main-color);
+}
+
+.rejectBtn {
+  background-color: var(--error-color);
+}
+
+.approveBtn:hover,
+.rejectBtn:hover {
+  opacity: 1;
+}
