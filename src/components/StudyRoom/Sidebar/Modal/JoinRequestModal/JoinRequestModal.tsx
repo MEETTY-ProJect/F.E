@@ -9,7 +9,7 @@ interface RequestUser {
   requestTime: string;
 }
 
-const dummyRequests: RequestUser[] = Array.from({ length: 10 }, (_, i) => ({
+const dummyRequests: RequestUser[] = Array.from({ length: 12 }, (_, i) => ({
   id: i + 1,
   nickname: `요청자${i + 1}`,
   requestTime: `2025-06-25 ${String(9 + (i % 10)).padStart(2, "0")}:${String(

@@ -12,18 +12,21 @@
 }
 
 .modal {
-  background: white;
-  border-radius: 10px;
-  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  height: 75%;
+  max-height: 650px;
   width: 90%;
   max-width: 900px;
-  height: 75%;
+  padding: 1rem;
+  border-radius: 10px;
+  background: white;
 }
 
 .header {
+  flex-shrink: 0; /* 줄어들지 않게 */
   display: flex;
   justify-content: space-between;
-  align-items: center;
   padding: 1rem;
   border-bottom: 3px solid rgba(51, 51, 51, 0.2);
 }
@@ -40,5 +43,9 @@
 }
 
 .content {
+  flex: 1; /* 남은 공간 다 차지 */
+  /* overflow-y: auto; */
   margin: 1rem;
+  display: flex;
+  flex-direction: column;
 }
