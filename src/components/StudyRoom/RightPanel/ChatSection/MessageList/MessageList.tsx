@@ -14,8 +14,9 @@ interface Message {
   user: string;
   profile: string | null;
   content: string;
-  time: string; // 표시용 (e.g. "14:32")
-  timestamp: number; // 정렬용 (ms)
+  time: string; // "14:32"
+  timestamp: number; // ms
+  date: string; // "2025-07-03"
 }
 
 interface MessageListProps {
@@ -61,18 +62,25 @@ const MessageList = ({ newMessages }: MessageListProps) => {
       fetchedTimestamps.current.add(oldestTime);
 
       const transformed = data.map((msg): Message => {
-        const date = new Date(msg.createdAt);
+        const dateObj = new Date(msg.createdAt);
+
+        const year = dateObj.getFullYear();
+        const month = dateObj.getMonth() + 1;
+        const day = dateObj.getDate();
+        const formattedDate = `${year}년 ${month}월 ${day}일`;
+
         return {
           id: msg.messageId,
           user: msg.username,
           profile: msg.profileImage ?? defaultImage,
           content: msg.message,
-          time: date.toLocaleTimeString("ko-KR", {
+          time: dateObj.toLocaleTimeString("ko-KR", {
             hour12: false,
             hour: "2-digit",
             minute: "2-digit",
           }),
-          timestamp: date.getTime(),
+          timestamp: dateObj.getTime(),
+          date: formattedDate,
         };
       });
 
@@ -114,9 +122,9 @@ const MessageList = ({ newMessages }: MessageListProps) => {
 
     if (ref.scrollTop <= MAX_SCROLL_TOP) {
       if (!isAtTopOnce) {
-        setIsAtTopOnce(true); // 첫 번째 도달: 대기 상태로 변경
+        setIsAtTopOnce(true);
       } else {
-        fetchMessages(); // 두 번째 도달 시에만 불러오기
+        fetchMessages();
         setIsAtTopOnce(false);
       }
     } else {
@@ -151,6 +159,25 @@ const MessageList = ({ newMessages }: MessageListProps) => {
     (a, b) => a.timestamp - b.timestamp
   );
 
+  const renderMessagesWithDateSeparators = () => {
+    const elements: React.ReactNode[] = [];
+    let lastDate: string | null = null;
+
+    for (const msg of allMessages) {
+      if (msg.date !== lastDate) {
+        elements.push(
+          <div key={`date-${msg.date}`} className={styles.dateSeparator}>
+            {msg.date}
+          </div>
+        );
+        lastDate = msg.date;
+      }
+      elements.push(<MessageItem key={msg.id} message={msg} />);
+    }
+
+    return elements;
+  };
+
   return (
     <div
       ref={scrollRef}
@@ -160,11 +187,9 @@ const MessageList = ({ newMessages }: MessageListProps) => {
       }`}
     >
       {messages.length === 0 ? (
-        <p style={{ textAlign: "center", color: "#888", marginTop: "1rem" }}>
-          메시지가 없습니다.
-        </p>
+        <p className={styles.emptyMessage}>메시지가 없습니다.</p>
       ) : (
-        allMessages.map((msg) => <MessageItem key={msg.id} message={msg} />)
+        renderMessagesWithDateSeparators()
       )}
       <div ref={bottomRef} />
     </div>
