@@ -11,7 +11,7 @@ export function useChatSocket(
     if (!roomId || !token) return;
 
     const ws = new WebSocket(
-      `ws://34.64.218.29:8080/chat?room=${roomId}&token=${token}`
+      `ws://34.22.72.174:8080/chat?room=${roomId}&token=${token}`
     );
     socketRef.current = ws;
 
