@@ -6,11 +6,14 @@ import RightPanel from "../StudyRoom/RightPanel";
 import styles from "./StudyRoomPage.module.css";
 import { getStudyRoomDetail, StudyRoomInfo } from "../../api/studyroomInfo.api";
 import { useParams } from "react-router";
+import { useUserIdFromToken } from "../../hooks/useUserIdFromToken";
 
 const StudyRoomPage: React.FC = () => {
   const { roomId } = useParams<{ roomId: string }>();
   const [isOpen, setIsOpen] = useState(true);
   const [roomInfo, setRoomInfo] = useState<StudyRoomInfo | null>(null);
+  const token = localStorage.getItem("accessToken");
+  const userId = useUserIdFromToken(token);
 
   const togglePanel = () => {
     setIsOpen((prev) => !prev);
@@ -38,7 +41,11 @@ const StudyRoomPage: React.FC = () => {
 
       <div className={styles.body}>
         <Sidebar roomInfo={roomInfo} />
-        <MainContent />
+        <MainContent
+          roomId={roomId ?? ""}
+          token={token ?? ""}
+          userId={userId ?? ""}
+        />
         <RightPanel isOpen={isOpen} />
       </div>
     </div>
