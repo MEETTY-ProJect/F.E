@@ -1,20 +1,52 @@
 import React from "react";
-import styles from "./ConnectPanel.module.css";
 
-interface Props {
+interface ConnectPanelProps {
   onConnect: () => void;
+  isMicOn: boolean;
+  isCamOn: boolean;
+  toggleMic: () => void;
+  toggleCam: () => void;
+  videoDevices: MediaDeviceInfo[];
+  selectedDeviceId: string | null;
+  changeCamera: (deviceId: string) => void;
 }
 
-const ConnectPanel = ({ onConnect }: Props) => {
+const ConnectPanel = ({
+  onConnect,
+  isMicOn,
+  isCamOn,
+  toggleMic,
+  toggleCam,
+  videoDevices,
+  selectedDeviceId,
+  changeCamera,
+}: ConnectPanelProps) => {
   return (
-    <div className={styles.panel}>
-      <p className={styles.message}>
-        📹 <strong>화상채팅 기능을 사용하려면</strong> 카메라 및 마이크 사용에
-        동의해야 합니다.
-      </p>
-      <button className={styles.button} onClick={onConnect}>
-        동의하고 연결하기
-      </button>
+    <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+      <button onClick={onConnect}>🔌 연결하기</button>
+      <div>
+        <button onClick={toggleMic}>
+          {isMicOn ? "🔊 마이크 끄기" : "🔇 마이크 켜기"}
+        </button>
+        <button onClick={toggleCam}>
+          {isCamOn ? "📷 카메라 끄기" : "🚫 카메라 켜기"}
+        </button>
+      </div>
+      <div>
+        <label>
+          카메라 선택:{" "}
+          <select
+            value={selectedDeviceId ?? ""}
+            onChange={(e) => changeCamera(e.target.value)}
+          >
+            {videoDevices.map((device) => (
+              <option key={device.deviceId} value={device.deviceId}>
+                {device.label || `카메라 (${device.deviceId.slice(0, 5)}...)`}
+              </option>
+            ))}
+          </select>
+        </label>
+      </div>
     </div>
   );
 };
