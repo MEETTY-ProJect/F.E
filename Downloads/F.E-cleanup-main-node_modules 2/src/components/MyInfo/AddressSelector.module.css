@@ -1,0 +1,19 @@
+.input {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+
+  width: 100%;
+  padding: 0.7rem 2.5rem 0.7rem 0.7rem; /* 오른쪽 여유 */
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  margin-top: 0.3rem;
+  margin-bottom: 1rem;
+
+  color: var(--subText-color);
+  background-color: #fff;
+
+  background: url("../../assets/chevron-down.svg") no-repeat right 0.75rem
+    center;
+  background-size: 1rem;
+}

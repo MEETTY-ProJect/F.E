@@ -1,0 +1,46 @@
+.list {
+  display: flex;
+  flex-direction: column;
+}
+
+.participant {
+  background-color: #fff;
+
+  border-bottom: 1px solid #ddd;
+  padding: 0.6rem 0.6rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 3px 5px #ddd;
+}
+
+.leftContent {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.rightContent button {
+  background: #fff;
+  border: none;
+  color: var(--subText-color);
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+.profileImage {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.nickname {
+  font-size: 1rem;
+}
+
+.leader {
+  color: var(--main-color);
+}

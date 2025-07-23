@@ -1,0 +1,16 @@
+.kakao-login-button {
+    display: flex;
+    align-items: center;
+    border-radius: 12px;
+    padding: 0; /* 여백 제거 */
+    cursor: pointer;
+    background-color: #FEE500;  /* 버튼 배경색 */
+    box-shadow: none;  /* 그림자 제거 */
+    border: none;
+    margin-bottom: 3px;
+}
+  
+.kakao-login-icon {
+    width: 100px;
+    height: 26px;
+}

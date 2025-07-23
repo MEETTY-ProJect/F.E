@@ -1,0 +1,46 @@
+.panelContainer {
+  display: flex;
+  flex-direction: column;
+  width: 380px;
+  height: 100%;
+  background-color: var(--modal-color);
+  border-left: 1px solid #ddd;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.participants {
+  flex: 3.5;
+}
+
+.chat {
+  flex: 6.5;
+}
+
+.sectionContent {
+  flex: 1;
+  overflow-y: auto;
+
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE, Edge */
+}
+
+.sectionContent::-webkit-scrollbar {
+  display: none;
+}
+
+.sectionTitle {
+  position: relative;
+  z-index: 901;
+  background-color: white;
+  padding: 1rem 1.5rem;
+  border: 1px solid #ddd;
+  border-top: 2px solid #ddd;
+  font-weight: bold;
+  font-size: 1.2rem;
+  box-shadow: 0 3px 5px #ccc;
+}

@@ -1,0 +1,35 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 1rem 1rem 5rem;
+  background-color: var(--text-color);
+  color: #fff;
+  position: relative;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.header-right {
+  display: flex;
+  height: 1.5rem;
+}
+/* .header-left-name {
+}
+
+.header-left-bar {
+} */
+
+.human-icon {
+  width: 15px;
+  height: 15px;
+}
+
+.header-left-number {
+  font-size: 0.8rem;
+  color: var(--main-color);
+}
